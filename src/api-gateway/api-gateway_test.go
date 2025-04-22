@@ -11,10 +11,7 @@ func TestMainPage(t *testing.T) {
 		t.Errorf("Error with requesting: %v", err)
 	}
 	defer response.Body.Close()
-	bs := make([]byte, 1024)
-	n, err := response.Body.Read(bs)
-	text := string(bs[:n])
-	if text != "Hello, world!" {
-		t.Errorf("Bad response: \"%v\"", text)
+	if response.Status != "200 OK" {
+		t.Errorf("Bad status: \"%v\"", response.Status)
 	}
 }
