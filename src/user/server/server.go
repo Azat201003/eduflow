@@ -14,17 +14,22 @@ type userServiceServer struct {
 	db *gorm.DB
 }
 
-func (*userServiceServer) Login(context context.Context, creditionals *pb.Creditionals) (*pb.Token, error) {
-	return &pb.Token{Token: "abeme"}, nil
+func (s *userServiceServer) Login(context context.Context, creditionals *pb.Creditionals) (*pb.Token, error) {
+	user := db.User{Username: creditionals.Username, Password: creditionals.Password}
+	err := db.FindUser(s.db, &user)
+	return &pb.Token{Token: user.Token}, err
 }
 
-func (s *userServiceServer) Register(context.Context, *pb.Creditionals) (*pb.Token, error) {
-	db.CreateUser(s.db)
-	return &pb.Token{Token: "abeme"}, nil
+func (s *userServiceServer) Register(context context.Context, creditionals *pb.Creditionals) (*pb.Token, error) {
+	user := db.User{Username: creditionals.Username, Password: creditionals.Password}
+	err := db.CreateUser(s.db, &user)
+	return &pb.Token{Token: user.Token}, err
 }
 
-func (*userServiceServer) GetById(ctx context.Context, id *pb.Id) (*pb.User, error) {
-	return &pb.User{Id: 0, Username: "John"}, nil
+func (s *userServiceServer) GetById(ctx context.Context, id *pb.Id) (*pb.User, error) {
+	user := db.User{ID: uint64(id.Id)}
+	db.FindUser(s.db, &user)
+	return &pb.User{Id: id.Id, Username: user.Username}, nil
 }
 
 func NewServer(db *gorm.DB) pb.UserServiceServer {

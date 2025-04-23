@@ -1,6 +1,10 @@
 package db
 
-import "gorm.io/gorm"
+import (
+	"math/rand"
+
+	"gorm.io/gorm"
+)
 
 type User struct {
 	Username string
@@ -9,14 +13,27 @@ type User struct {
 	ID       uint64
 }
 
-func generateToken() string {
-	return "abeme"
+func (*User) TableName() string {
+	return "users.users"
 }
 
-func CreateUser(db *gorm.DB, user *User) {
-	err := db.Create(User{
-		Username: user.Username,
-		Password: user.Password,
-		Token: generateToken()
-	}).Error
+const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+func generateToken() string {
+	b := make([]byte, 10)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	return string(b)
+}
+
+func CreateUser(db *gorm.DB, user *User) error {
+	user.Token = generateToken()
+	err := db.Create(user).Error
+	return err
+}
+
+func FindUser(db *gorm.DB, user *User) error {
+	err := db.Find(user).Error
+	return err
 }
