@@ -10,8 +10,8 @@ require (
 )
 
 require (
-	github.com/Azat201003/eduflow_service_api/config v0.2.1
-	github.com/Azat201003/eduflow_service_api/gen v0.1.5
+	github.com/Azat201003/eduflow_service_api/config v0.3.4
+	github.com/Azat201003/eduflow_service_api/gen v0.2.3
 )
 
 require (

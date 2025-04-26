@@ -1,8 +1,10 @@
 package db
 
 import (
+	"fmt"
 	"math/rand"
 
+	"github.com/Azat201003/eduflow_service_api/config"
 	"gorm.io/gorm"
 )
 
@@ -14,7 +16,15 @@ type User struct {
 }
 
 func (*User) TableName() string {
-	return "users.users"
+	conf, err := config.GetConfig("../../../../config.yaml")
+	if err != nil {
+		return "users.users"
+	}
+	serv, err := conf.GetServiceById(0)
+	if err != nil {
+		return "users.users"
+	}
+	return fmt.Sprintf("%v.users", serv.Connect.Schema)
 }
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -34,6 +44,6 @@ func CreateUser(db *gorm.DB, user *User) error {
 }
 
 func FindUser(db *gorm.DB, user *User) error {
-	err := db.Find(user).Error
+	err := db.First(user, user).Error
 	return err
 }

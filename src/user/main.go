@@ -5,12 +5,11 @@ import (
 
 	config "github.com/Azat201003/eduflow_service_api/config"
 
-	pb "github.com/Azat201003/eduflow_service_api/gen/user"
-
-	// server "eduflow/src/proto/user/server"
 	"fmt"
 	"log"
 	"net"
+
+	pb "github.com/Azat201003/eduflow_service_api/gen/user"
 
 	"google.golang.org/grpc"
 	"gorm.io/driver/postgres"
@@ -32,7 +31,8 @@ func main() {
 
 	// database connecting
 	db_conf := conf.Database
-	dsn := fmt.Sprintf("host=%v user=%v password=1234 dbname=%v port=%v sslmode=disable TimeZone=Europe/Moscow", db_conf.Host, service_config.DB_user, service_config.DB, db_conf.Port)
+	conn_conf := service_config.Connect
+	dsn := fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=%v sslmode=disable TimeZone=Europe/Moscow search_path=%v", db_conf.Host, conn_conf.User, conn_conf.Password, conn_conf.DB, db_conf.Port, conn_conf.Schema)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Error with connecting to db: %v", err)

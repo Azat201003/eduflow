@@ -26,10 +26,17 @@ func (s *userServiceServer) Register(context context.Context, creditionals *pb.C
 	return &pb.Token{Token: user.Token}, err
 }
 
-func (s *userServiceServer) GetById(ctx context.Context, id *pb.Id) (*pb.User, error) {
+func (s *userServiceServer) GetUserById(ctx context.Context, id *pb.Id) (*pb.User, error) {
 	user := db.User{ID: uint64(id.Id)}
 	db.FindUser(s.db, &user)
-	return &pb.User{Id: id.Id, Username: user.Username}, nil
+	return &pb.User{Id: id, Username: user.Username}, nil
+}
+
+func (s *userServiceServer) GetUserByToken(ctx context.Context, token *pb.Token) (*pb.User, error) {
+	user := db.User{Token: token.Token}
+	db.FindUser(s.db, &user)
+	id := pb.Id{Id: user.ID}
+	return &pb.User{Id: &id, Username: user.Username}, nil
 }
 
 func NewServer(db *gorm.DB) pb.UserServiceServer {
