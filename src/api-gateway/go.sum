@@ -1,9 +1,13 @@
 github.com/Azat201003/eduflow_service_api/config v0.2.1 h1:VuSmcUrtb+JxTpm1C5SXlB9tgDuZehUDQhe+/DSbUCM=
 github.com/Azat201003/eduflow_service_api/config v0.2.1/go.mod h1:zhFSZcIV51Hfl/RzWUd0z9enD0nzJRXmNL3BZk1FlX4=
+github.com/Azat201003/eduflow_service_api/config v0.3.4 h1:xn9gJe4tjmUYH3iMBeM5fzTbNcui0lstEXYhS9PfYaU=
+github.com/Azat201003/eduflow_service_api/config v0.3.4/go.mod h1:zhFSZcIV51Hfl/RzWUd0z9enD0nzJRXmNL3BZk1FlX4=
 github.com/Azat201003/eduflow_service_api/gen v0.0.0-20250421184257-84da53ac332c h1:zqMHU2Vq5vbMau6qfNcGkpSvjc6pZ4hqdx07T13EMg0=
 github.com/Azat201003/eduflow_service_api/gen v0.0.0-20250421184257-84da53ac332c/go.mod h1:pGwHLF6Htu0rgNOXQera5obJw+COHYdMS91fKachNUA=
 github.com/Azat201003/eduflow_service_api/gen v0.1.5 h1:Qjj/PMhRvqodjD9H3QdCEFqtL8/mg75J7vPzlWbgoUA=
 github.com/Azat201003/eduflow_service_api/gen v0.1.5/go.mod h1:pGwHLF6Htu0rgNOXQera5obJw+COHYdMS91fKachNUA=
+github.com/Azat201003/eduflow_service_api/gen v0.2.0 h1:cGa+HyGySUB1W2iQOt7ulRJNy8xFT6ijrVHYZzY2u3o=
+github.com/Azat201003/eduflow_service_api/gen v0.2.0/go.mod h1:pGwHLF6Htu0rgNOXQera5obJw+COHYdMS91fKachNUA=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/labstack/echo/v4 v4.13.3 h1:pwhpCPrTl5qry5HRdM5FwdXnhXSLSY+WE+YQSeCaafY=

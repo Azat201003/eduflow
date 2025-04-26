@@ -5,8 +5,8 @@ go 1.23.7
 require github.com/labstack/echo/v4 v4.13.3
 
 require (
-	github.com/Azat201003/eduflow_service_api/config v0.2.1 // indirect
-	github.com/Azat201003/eduflow_service_api/gen v0.1.5 // indirect
+	github.com/Azat201003/eduflow_service_api/config v0.3.4 // indirect
+	github.com/Azat201003/eduflow_service_api/gen v0.2.0 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
