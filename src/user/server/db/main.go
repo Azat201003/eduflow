@@ -1,6 +1,7 @@
 package db
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 
@@ -44,6 +45,11 @@ func CreateUser(db *gorm.DB, user *User) error {
 }
 
 func FindUser(db *gorm.DB, user *User) error {
-	err := db.First(user, user).Error
+	//  RowsAffected
+	r := db.First(user, user)
+	if r.RowsAffected == 0 {
+		return errors.New("Find no records")
+	}
+	err := r.First(user).Error
 	return err
 }
