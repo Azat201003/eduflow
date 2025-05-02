@@ -1,6 +1,7 @@
 package db
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/Azat201003/eduflow_service_api/config"
@@ -12,6 +13,11 @@ type Summary struct {
 	Description string
 	FilePath    string
 	ID          uint64
+	AuthorId    uint64
+}
+
+type DBManger struct {
+	DB *gorm.DB
 }
 
 func (*Summary) TableName() string {
@@ -26,12 +32,31 @@ func (*Summary) TableName() string {
 	return fmt.Sprintf("%v.summaries", serv.Connect.Schema)
 }
 
-func CreateSummary(db *gorm.DB, user *Summary) error {
-	err := db.Create(user).Error
+func (dbm *DBManger) CreateSummary(summary *Summary) error {
+	err := dbm.DB.Create(summary).Error
 	return err
 }
 
-func FindSummary(db *gorm.DB, user *Summary) error {
-	err := db.First(user, user).Error
+func (dbm *DBManger) FindSummary(summary *Summary) error {
+	r := dbm.DB.First(summary, summary)
+	if r.RowsAffected == 0 {
+		return errors.New("Find no records")
+	}
+	err := r.Error
+	return err
+}
+
+func UpdateSummary(db *gorm.DB, summary *Summary) error {
+	err := db.Save(summary).Error
+	return err
+}
+
+func DeleteSummary(db *gorm.DB, summary *Summary) error {
+	err := db.Delete(summary).Error
+	return err
+}
+
+func ListSummaries(db *gorm.DB, summaries *[]Summary) error {
+	err := db.Find(summaries).Error
 	return err
 }
