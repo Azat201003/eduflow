@@ -9,7 +9,7 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/Azat201003/eduflow_service_api/gen/user"
+	pb "github.com/Azat201003/eduflow_service_api/gen/go/user"
 
 	"google.golang.org/grpc"
 	"gorm.io/driver/postgres"

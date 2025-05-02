@@ -2,84 +2,86 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
+	"log"
 	"testing"
+	"user-service/server/db"
 
 	"github.com/Azat201003/eduflow_service_api/config"
-	"github.com/Azat201003/eduflow_service_api/gen/user"
+	"github.com/Azat201003/eduflow_service_api/gen/go/user"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-var user_client user.UserServiceClient
+type UserTestSuite struct {
+	suite.Suite
+	Client *user.UserServiceClient
+	dbm    *db.DBManger
+}
 
-func connectUser() (user.UserServiceClient, error) {
+func TestUserSuite(t *testing.T) {
+	t.Helper()
+	t.Parallel()
 	// include configuration
 	conf, err := config.GetConfig("../../../config.yaml")
-	if err != nil {
-		return nil, errors.New(fmt.Sprintf("error with getting configuration %v", err.Error()))
-	}
+	assert.NoError(t, err)
 
 	user_conf, err := conf.GetServiceById(0)
+	assert.NoError(t, err)
 
-	if err != nil {
-		return nil, errors.New(fmt.Sprintf("error with finding configuration %v", err.Error()))
-	}
-
-	// connect to user service
+	// connecting to user service
 	user_conn, err := grpc.NewClient(fmt.Sprintf("%v:%v", user_conf.Host, user_conf.Port), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	assert.NoError(t, err)
+
+	user_client := user.NewUserServiceClient(user_conn)
+
+	// connecting db
+	db_conf := conf.Database
+	conn_conf := user_conf.Connect
+	dsn := fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=%v sslmode=disable TimeZone=Europe/Moscow search_path=%v", db_conf.Host, conn_conf.User, conn_conf.Password, conn_conf.DB, db_conf.Port, conn_conf.Schema)
+	db_conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("error %v", err.Error()))
+		log.Fatalf("Error with connecting to db: %v", err)
 	}
-	user_client = user.NewUserServiceClient(user_conn)
-	return user_client, nil
+
+	s := UserTestSuite{
+		Client: &user_client,
+		dbm:    &db.DBManger{DB: db_conn},
+	}
+	suite.Run(t, &s)
 }
 
-func TestLoggingIn(t *testing.T) {
-	user_client, err := connectUser()
-	if err != nil {
-		t.Fatal(err)
-	}
+func (s *UserTestSuite) TestLoggingIn() {
 	var opts []grpc.CallOption
-	token, err := user_client.Login(context.Background(), &user.Creditionals{Username: "Coolman", Password: "1234"}, opts...)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if token.Token != "anqrfsNqOu" {
-		fmt.Println("Getted token: ", token.Token)
-		t.Fatal("Token is not valid")
-	}
+	token, err := (*s.Client).Login(context.Background(), &user.Creditionals{Username: "Coolman", Password: "1234"}, opts...)
+	s.NoError(err)
+	s.Equal(token.Token, "anqrfsNqOu")
 }
 
-func TestGettingByToken(t *testing.T) {
-	user_client, err := connectUser()
-	if err != nil {
-		t.Fatal(err)
-	}
-	var opts []grpc.CallOption
-	user_obj, err := user_client.GetUserByToken(context.Background(), &user.Token{Token: "anqrfsNqOu"}, opts...)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if user_obj.Username != "Coolman" {
-		fmt.Println("Getted user: ", user_obj)
-		t.Fatal("User is not valid")
-	}
+func (s *UserTestSuite) TestGettingByToken() {
+	user_obj, err := (*s.Client).GetUserByToken(context.Background(), &user.Token{Token: "anqrfsNqOu"})
+	s.NoError(err)
+	s.Equal(user_obj.Username, "Coolman")
 }
 
-func TestGettingById(t *testing.T) {
-	user_client, err := connectUser()
-	if err != nil {
-		t.Fatal(err)
-	}
-	var opts []grpc.CallOption
-	user_obj, err := user_client.GetUserById(context.Background(), &user.Id{Id: 3}, opts...)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if user_obj.Username != "Coolman" {
-		fmt.Println("Getted user: ", user_obj)
-		t.Fatal("User is not valid")
-	}
+func (s *UserTestSuite) TestGettingById() {
+	user_obj, err := (*s.Client).GetUserById(context.Background(), &user.Id{Id: 3})
+	s.NoError(err)
+	s.Equal(user_obj.Username, "Coolman")
+}
+
+func (s *UserTestSuite) TestByNonexistenTokenGetting() {
+	user_obj, err := (*s.Client).GetUserByToken(context.Background(), &user.Token{Token: "Abeme don't rules the world"})
+	s.Error(err)
+	s.Nil(user_obj)
+}
+
+func (s *UserTestSuite) TestByNonexistenIdGetting() {
+	user_obj, err := (*s.Client).GetUserById(context.Background(), &user.Id{Id: 525252})
+	s.Error(err)
+	s.Nil(user_obj)
 }

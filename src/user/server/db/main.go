@@ -3,6 +3,7 @@ package db
 import (
 	"errors"
 	"fmt"
+	"log"
 	"math/rand"
 
 	"github.com/Azat201003/eduflow_service_api/config"
@@ -14,6 +15,7 @@ type User struct {
 	Password string
 	Token    string
 	ID       uint64
+	IsStaff  bool
 }
 
 func (*User) TableName() string {
@@ -38,18 +40,22 @@ func generateToken() string {
 	return string(b)
 }
 
-func CreateUser(db *gorm.DB, user *User) error {
+type DBManger struct {
+	DB *gorm.DB
+}
+
+func (dbm *DBManger) CreateUser(user *User) error {
 	user.Token = generateToken()
-	err := db.Create(user).Error
+	err := dbm.DB.Create(user).Error
 	return err
 }
 
-func FindUser(db *gorm.DB, user *User) error {
-	//  RowsAffected
-	r := db.First(user, user)
+func (dbm *DBManger) FindUser(user *User) error {
+	log.Println(user.ID)
+	r := dbm.DB.First(user, user)
+	log.Println(r.Error, r.RowsAffected)
 	if r.RowsAffected == 0 {
 		return errors.New("Find no records")
 	}
-	err := r.First(user).Error
-	return err
+	return r.Error
 }
