@@ -3,6 +3,7 @@ package tests
 import (
 	"context"
 	"fmt"
+	"io"
 	"summary-service/server/db"
 	"testing"
 
@@ -21,8 +22,6 @@ type ClientTestSuite struct {
 	Client *summary.SummaryServiceClient
 	dbm    *db.DBManger
 }
-
-
 
 func TestClientSuite(t *testing.T) {
 	t.Helper()
@@ -79,7 +78,7 @@ func (s *ClientTestSuite) TestCreating() {
 	obj := &summary.Summary{
 		Title:       "Test",
 		Description: "Summary service testing creating",
-		FilePath:    "-",
+		FilePath:    "_",
 		AuthorId:    &summary.Id{Id: 2},
 	}
 	resp, err := (*s.Client).CreateSummary(context.Background(), obj)
@@ -95,4 +94,38 @@ func (s *ClientTestSuite) TestCreating() {
 		FilePath:    obj2.FilePath,
 		Id:          &summary.Id{Id: resp.Id},
 	})
+}
+
+func (s *ClientTestSuite) TestList() {
+	stream, err := (*s.Client).GetFilteredSummaries(context.Background(), &summary.FilterRequest{
+		Filter: &summary.Summary{
+			AuthorId: &summary.Id{Id: 2},
+		},
+		Page: &summary.Page{
+			Number: 3,
+			Size:   3,
+		},
+	})
+	s.NoError(err)
+
+	obj, err := stream.Recv()
+	s.NoError(err)
+
+	s.compareEqualSummaries(obj, &summary.Summary{
+		Id:          &summary.Id{Id: 24},
+		Title:       "New",
+		Description: "New file",
+		FilePath:    "test-7880193622273556242",
+		AuthorId:    &summary.Id{Id: 2},
+	})
+
+	for {
+		obj, err = stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		s.Equal(obj.AuthorId.Id, uint64(2))
+	}
+	err = stream.CloseSend()
+	s.NoError(err)
 }

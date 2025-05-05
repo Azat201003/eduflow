@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"log"
 
 	"summary-service/server/db"
 
@@ -37,45 +38,39 @@ func (s *summaryServiceServer) CreateSummary(ctx context.Context, summary *pb.Su
 	return &pb.Id{Id: db_summary.ID}, err
 }
 
-// func (s *summaryServiceServer) UpdateSummary(ctx context.Context, summary *pb.Summary) error {
-// 	db_summary := db.Summary{
-// 		Title:       summary.Title,
-// 		Description: summary.Description,
-// 		FilePath:    summary.FilePath,
-// 		ID:          summary.Id.Id,
-// 		AuthorId:    summary.AuthorId.Id,
-// 	}
-// 	err := db.UpdateSummary(s.db, &db_summary)
-// 	return err
-// }
-
-// func (s *summaryServiceServer) DeleteSummary(ctx context.Context, id *pb.Id) error {
-// 	db_summary := db.Summary{
-// 		ID: id.Id,
-// 	}
-// 	err := s.dbm.(&db_summary)
-// 	return err
-// }
-
-/*
-func (s *summaryServiceServer) ListSummaries(ctx context.Context, empty *pb.Empty) (*pb.Summaries, error) {
-	var summaries []db.Summary
-	err := db.ListSummaries(s.db, &summaries)
-	if err != nil {
-		return nil, err
+func (s *summaryServiceServer) GetFilteredSummaries(request *pb.FilterRequest, stream pb.SummaryService_GetFilteredSummariesServer) error {
+	summary := request.Filter
+	conds := &db.Summary{
+		Title:       summary.Title,
+		Description: summary.Description,
+		FilePath:    summary.FilePath,
 	}
-	var pbSummaries []*pb.Summary
-	for _, summary := range summaries {
-		pbSummaries = append(pbSummaries, &pb.Summary{
+	if summary.Id != nil {
+		conds.ID = summary.Id.Id
+	}
+	if summary.AuthorId != nil {
+		conds.AuthorId = summary.AuthorId.Id
+	}
+	summaries, err := s.dbm.ListSummaries(conds, int((request.Page.Number-1)*request.Page.Size), int(request.Page.Size))
+	log.Println(summary)
+	log.Println(*summaries)
+	if err != nil {
+		return err
+	}
+	for _, summary := range *summaries {
+		if err := stream.Send(&pb.Summary{
 			Id:          &pb.Id{Id: summary.ID},
 			Title:       summary.Title,
 			Description: summary.Description,
 			FilePath:    summary.FilePath,
-		})
+			AuthorId:    &pb.Id{Id: summary.AuthorId},
+		}); err != nil {
+			return err
+		}
 	}
-	return &pb.Summaries{Summaries: pbSummaries}, nil
+
+	return nil
 }
-*/
 
 func NewServer(db_gorm *gorm.DB) pb.SummaryServiceServer {
 	server := new(summaryServiceServer)

@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"math"
+	"math/rand/v2"
+	"strconv"
 	"testing"
 
 	"github.com/Azat201003/eduflow_service_api/config"
@@ -12,6 +14,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/status"
 )
 
 type ClientTestSuite struct {
@@ -38,7 +41,6 @@ func TestClientSuite(t *testing.T) {
 }
 
 func (s *ClientTestSuite) TestWriting() {
-	var opts []grpc.CallOption
 	chunk_size := 12
 	data := []byte(
 		`# Something
@@ -46,7 +48,7 @@ func (s *ClientTestSuite) TestWriting() {
 It is **Something**, but I *don't know* what is it.
 
 `)
-	response, err := (*s.Client).StartSending(context.Background(), &filager.StartWriteRequest{FilePath: "new", ChunkSize: uint64(chunk_size), FileSize: uint64(len(data)), FileType: filager.FileType_DOCUMENT}, opts...)
+	response, err := (*s.Client).StartSending(context.Background(), &filager.StartWriteRequest{FilePath: "test-" + strconv.Itoa(rand.Int()), ChunkSize: uint64(chunk_size), FileSize: uint64(len(data)), FileType: filager.FileType_DOCUMENT})
 	s.NoError(err)
 	uuid := response.Uuid
 	for i := 0; ; i++ {
@@ -61,6 +63,11 @@ It is **Something**, but I *don't know* what is it.
 	fmt.Println(r)
 }
 
+func (s *ClientTestSuite) TestWriteExistError() {
+	_, err := (*s.Client).StartSending(context.Background(), &filager.StartWriteRequest{FilePath: "new"})
+	s.ErrorContains(err, "exist")
+}
+
 func sliceEqual(a, b []byte) bool {
 	if len(a) > len(b) {
 		a, b = b, a
@@ -73,34 +80,25 @@ func sliceEqual(a, b []byte) bool {
 	return true
 }
 
-// func TestReading(t *testing.T) {
-// 	client, err := connectSummager()
+func (s *ClientTestSuite) TestReading() {
+	chunk_size := 18
+	response, err := (*s.Client).StartReading(context.Background(), &filager.StartReadRequest{
+		ChunkSize: uint64(chunk_size),
+		FilePath:  "new",
+		FileType:  filager.FileType_DOCUMENT,
+	})
+	s.NoError(err)
+	uuid := response.Uuid
 
-// 	if err != nil {
-// 		t.Error(err)
-// 	}
+	var loaded_data []byte
+	for {
+		chunk, err := (*s.Client).ReadChunk(context.Background(), &filager.ReadRequest{Uuid: int32(uuid)})
+		if s, _ := status.FromError(err); s.Message() == "EOF" {
+			break
+		}
+		s.NoError(err)
+		loaded_data = append(loaded_data, chunk.Content...)
+	}
 
-// 	var opts []grpc.CallOption
-// 	response, err := (*client).StartReading(context.Background(), &summager.StartReadRequest{FilePath: "new", ChunkSize: 8}, opts...)
-// 	if err != nil {
-// 		t.Error(err)
-// 	}
-// 	uuid := response.Uuid
-// 	fmt.Println(uuid)
-// 	data := ""
-// 	for {
-// 		resp, err := (*client).ReadChunk(context.Background(), &summager.ReadRequest{Uuid: int32(uuid)})
-// 		// fmt.Println(err.Error())
-// 		if err != nil {
-// 			if s, _ := status.FromError(err); s.Message() == "EOF" {
-// 				break
-// 			}
-// 			// fmt.Println(err.Error(), io.EOF)
-// 			t.Error(err)
-// 		}
-// 		fmt.Println(err)
-// 		data += string(resp.Content)
-// 	}
-
-// 	fmt.Println(uuid, "\n-----------------------\n", data, "\n-----------------------")
-// }
+	fmt.Println(string(loaded_data))
+}

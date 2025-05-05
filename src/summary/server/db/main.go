@@ -46,17 +46,8 @@ func (dbm *DBManger) FindSummary(summary *Summary) error {
 	return err
 }
 
-func UpdateSummary(db *gorm.DB, summary *Summary) error {
-	err := db.Save(summary).Error
-	return err
-}
-
-func DeleteSummary(db *gorm.DB, summary *Summary) error {
-	err := db.Delete(summary).Error
-	return err
-}
-
-func ListSummaries(db *gorm.DB, summaries *[]Summary) error {
-	err := db.Find(summaries).Error
-	return err
+func (dbm *DBManger) ListSummaries(summary *Summary, offset int, limit int) (*[]Summary, error) {
+	var summaries []Summary
+	err := dbm.DB.Where(summary).Offset(offset).Limit(limit).Find(&summaries).Error
+	return &summaries, err
 }

@@ -4,6 +4,14 @@ github.com/Azat201003/eduflow_service_api/gen/go v0.1.2 h1:4t+edUKyzN0zsyIR8auR+
 github.com/Azat201003/eduflow_service_api/gen/go v0.1.2/go.mod h1:Z8okclK9xeR19L4dmbbAXWfm4nTfupjD/sv9lTjoxOM=
 github.com/Azat201003/eduflow_service_api/gen/go v0.1.3 h1:mQMwGFLbwAIxyPk/kIlD7WpWZgthCFcxw24rkZOW4F4=
 github.com/Azat201003/eduflow_service_api/gen/go v0.1.3/go.mod h1:Z8okclK9xeR19L4dmbbAXWfm4nTfupjD/sv9lTjoxOM=
+github.com/Azat201003/eduflow_service_api/gen/go v0.1.6 h1:cmJ/TRxakpirPcxI8z1P86J6Zw9BYQdC0nT5YuI471o=
+github.com/Azat201003/eduflow_service_api/gen/go v0.1.6/go.mod h1:Z8okclK9xeR19L4dmbbAXWfm4nTfupjD/sv9lTjoxOM=
+github.com/Azat201003/eduflow_service_api/gen/go v0.2.1 h1:HEeALFsETpRKd8pnST6ryCM3w3P0UIZI+u4IdvlP9yk=
+github.com/Azat201003/eduflow_service_api/gen/go v0.2.1/go.mod h1:Z8okclK9xeR19L4dmbbAXWfm4nTfupjD/sv9lTjoxOM=
+github.com/Azat201003/eduflow_service_api/gen/go v0.2.3 h1:TC9CTjriQahHcqmWLNBhfgSnJ2zrdyw2t1qU229Ax7c=
+github.com/Azat201003/eduflow_service_api/gen/go v0.2.3/go.mod h1:Z8okclK9xeR19L4dmbbAXWfm4nTfupjD/sv9lTjoxOM=
+github.com/Azat201003/eduflow_service_api/gen/go v0.2.5 h1:PLKkWA1sxRUJQIbCNMq+SBA7Pjr6fQWza3kPd6QkCIE=
+github.com/Azat201003/eduflow_service_api/gen/go v0.2.5/go.mod h1:Z8okclK9xeR19L4dmbbAXWfm4nTfupjD/sv9lTjoxOM=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=

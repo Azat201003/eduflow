@@ -8,6 +8,10 @@ github.com/Azat201003/eduflow_service_api/gen v0.1.5 h1:Qjj/PMhRvqodjD9H3QdCEFqt
 github.com/Azat201003/eduflow_service_api/gen v0.1.5/go.mod h1:pGwHLF6Htu0rgNOXQera5obJw+COHYdMS91fKachNUA=
 github.com/Azat201003/eduflow_service_api/gen v0.2.0 h1:cGa+HyGySUB1W2iQOt7ulRJNy8xFT6ijrVHYZzY2u3o=
 github.com/Azat201003/eduflow_service_api/gen v0.2.0/go.mod h1:pGwHLF6Htu0rgNOXQera5obJw+COHYdMS91fKachNUA=
+github.com/Azat201003/eduflow_service_api/gen/go v0.1.4 h1:lmd8VE276dCidzQjbAFQ6EeUG7nyuDsb8v6HO4Pzjyo=
+github.com/Azat201003/eduflow_service_api/gen/go v0.1.4/go.mod h1:Z8okclK9xeR19L4dmbbAXWfm4nTfupjD/sv9lTjoxOM=
+github.com/Azat201003/eduflow_service_api/gen/go v0.2.5 h1:PLKkWA1sxRUJQIbCNMq+SBA7Pjr6fQWza3kPd6QkCIE=
+github.com/Azat201003/eduflow_service_api/gen/go v0.2.5/go.mod h1:Z8okclK9xeR19L4dmbbAXWfm4nTfupjD/sv9lTjoxOM=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/labstack/echo/v4 v4.13.3 h1:pwhpCPrTl5qry5HRdM5FwdXnhXSLSY+WE+YQSeCaafY=

@@ -3,10 +3,11 @@ package db
 import (
 	"errors"
 	"fmt"
-	"log"
 	"math/rand"
 
 	"github.com/Azat201003/eduflow_service_api/config"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
 )
 
@@ -50,12 +51,27 @@ func (dbm *DBManger) CreateUser(user *User) error {
 	return err
 }
 
+type NoParamsError struct{}
+
+func (err *NoParamsError) GRPCStatus() *status.Status {
+	return status.New(codes.Canceled, err.Error())
+}
+func (*NoParamsError) Error() string { return "No params given." }
+
+type NotFoundError struct{}
+
+func (err *NotFoundError) GRPCStatus() *status.Status {
+	return status.New(codes.Canceled, err.Error())
+}
+func (*NotFoundError) Error() string { return "No params given." }
+
 func (dbm *DBManger) FindUser(user *User) error {
-	log.Println(user.ID)
+	if *user == (User{}) {
+		return errors.New("No params")
+	}
 	r := dbm.DB.First(user, user)
-	log.Println(r.Error, r.RowsAffected)
 	if r.RowsAffected == 0 {
-		return errors.New("Find no records")
+		return errors.New("Found no records")
 	}
 	return r.Error
 }
