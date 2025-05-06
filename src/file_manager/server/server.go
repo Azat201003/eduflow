@@ -67,7 +67,7 @@ func (s *fileManagerServiceServer) StartSending(context context.Context, request
 	}
 
 	uuid := rand.NewPCG(uint64(time.Now().Nanosecond()), uint64(time.Now().Second())).Uint64()
-	defer log.Println(uuid, uint64(time.Now().Nanosecond()), uint64(time.Now().Second()))
+	defer log.Println(uuid)
 	val, err := json.Marshal(request)
 	if err != nil {
 		return nil, err
@@ -77,8 +77,9 @@ func (s *fileManagerServiceServer) StartSending(context context.Context, request
 	if err != nil {
 		return nil, err
 	}
-
-	err = s.redis_client.Set(context, fmt.Sprintf("sends[%v]", uuid), val, time.Second*time.Duration(2*request.FileSize)).Err()
+	log.Println(time.Second * time.Duration(request.FileSize))
+	err = s.redis_client.Set(context, fmt.Sprintf("sends[%v]", uuid), val, time.Second*time.Duration(request.FileSize)).Err()
+	log.Println(time.Second*time.Duration(request.FileSize), err)
 	return &pb.StartResponse{Uuid: uuid}, err
 }
 

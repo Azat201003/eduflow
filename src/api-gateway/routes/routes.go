@@ -148,7 +148,10 @@ func MyUser(c echo.Context) error {
 			Ok: true,
 		})
 	}
-	return c.NoContent(http.StatusUnauthorized)
+	return c.JSON(http.StatusUnauthorized, Report{
+		Ok:      false,
+		Message: "Cannot find user with this token",
+	})
 }
 
 func GetUserById(c echo.Context) error {
@@ -219,7 +222,7 @@ func StartFileSending(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, Report{
 			Ok:      false,
-			Message: "Cannot start sending file.",
+			Message: fmt.Sprintf("Cannot start sending file: %v", err),
 		})
 	}
 
@@ -242,7 +245,7 @@ func SendChunk(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, Report{
 			Ok:      false,
-			Message: "Cannot send chunk.",
+			Message: fmt.Sprintf("Cannot send chunk: %v", err),
 		})
 	}
 
@@ -265,7 +268,7 @@ func CloseFileSending(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, Report{
 			Ok:      false,
-			Message: "Cannot close sending.",
+			Message: fmt.Sprintf("Cannot close sending file: %v", err),
 		})
 	}
 

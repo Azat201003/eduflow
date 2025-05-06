@@ -23,6 +23,8 @@ func (v *MyValidator) Validate(obj interface{}) error {
 	switch t := obj.(type) {
 	case *pb.StartWriteRequest:
 		return v.ValidateStartWriteRequest(t)
+	case *pb.WriteChunk:
+		return v.ValidateWriteChunk(t)
 	default:
 		return errors.New("Validator error: unknow type")
 	}
@@ -45,7 +47,7 @@ func (v *MyValidator) ValidateFilePath(obj string) error {
 	if obj == "" {
 		return errors.New("FilePath is empty")
 	}
-	if strings.Contains(obj, ".") || strings.Contains(obj, " ") || strings.Contains(obj, "\n") {
+	if strings.Contains(obj, ".") || strings.Contains(obj, " ") || strings.Contains(obj, "\n") || obj[0] == '/' {
 		return errors.New("FilePath contains invalid characters")
 	}
 
@@ -76,6 +78,13 @@ func (v *MyValidator) ValidateChunkSize(obj uint64) error {
 func (v *MyValidator) ValidateFileSize(obj uint64) error {
 	if obj == 0 {
 		return errors.New("FileSize is 0")
+	}
+	return nil
+}
+
+func (v *MyValidator) ValidateWriteChunk(obj *pb.WriteChunk) error {
+	if len(obj.Content) == 0 {
+		return errors.New("asfd") // TODO create redis manager
 	}
 	return nil
 }

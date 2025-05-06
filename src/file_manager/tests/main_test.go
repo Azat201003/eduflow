@@ -3,10 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"math"
 	"math/rand/v2"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/Azat201003/eduflow_service_api/config"
 	"github.com/Azat201003/eduflow_service_api/gen/go/filager"
@@ -101,4 +103,46 @@ func (s *ClientTestSuite) TestReading() {
 	}
 
 	fmt.Println(string(loaded_data))
+}
+
+func (s *ClientTestSuite) TestEmptyFilePath() {
+	_, err := (*s.Client).StartSending(context.Background(), &filager.StartWriteRequest{
+		ChunkSize: 4,
+		FileSize:  16,
+		FileType:  filager.FileType_DOCUMENT,
+	})
+	s.Error(err)
+}
+
+func (s *ClientTestSuite) TestEmptyFileSize() {
+	_, err := (*s.Client).StartSending(context.Background(), &filager.StartWriteRequest{
+		ChunkSize: 4,
+		FilePath:  "abeme_52",
+		FileType:  filager.FileType_DOCUMENT,
+	})
+	s.Error(err)
+}
+
+func (s *ClientTestSuite) TestEmptyChunkSize() {
+	_, err := (*s.Client).StartSending(context.Background(), &filager.StartWriteRequest{
+		FilePath: "abeme_1234",
+		FileSize: 16,
+		FileType: filager.FileType_DOCUMENT,
+	})
+	s.Error(err)
+}
+
+func (s *ClientTestSuite) TestTimeOut() {
+	resp, err := (*s.Client).StartSending(context.Background(), &filager.StartWriteRequest{
+		FilePath:  "abeme_1234",
+		FileSize:  8,
+		ChunkSize: 4,
+		FileType:  filager.FileType_DOCUMENT,
+	})
+	s.NoError(err)
+	uuid := resp.Uuid
+	time.Sleep(time.Second * time.Duration(9))
+	_, err = (*s.Client).SendChunk(context.Background(), &filager.WriteChunk{Uuid: uuid, Content: []byte("# Ab")})
+	log.Println(err)
+	s.Error(err)
 }
