@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"math/rand/v2"
+	"strconv"
 	"summary-service/server/db"
 	"testing"
 
@@ -27,7 +29,7 @@ func TestClientSuite(t *testing.T) {
 	t.Helper()
 	t.Parallel()
 
-	conf, err := config.GetConfig("../../../config.yaml")
+	conf, err := config.GetConfig("../../config.yaml")
 	assert.NoError(t, err)
 	summary_conf, err := conf.GetServiceById(1)
 	assert.NoError(t, err)
@@ -57,7 +59,8 @@ func (s *ClientTestSuite) compareEqualSummaries(s1, s2 *summary.Summary) {
 }
 
 func (s *ClientTestSuite) TestCreatingGetting() {
-	obj := &summary.Summary{Title: "Test", Description: "testing file", FilePath: "test", AuthorId: &summary.Id{Id: 2}}
+	i := strconv.Itoa(rand.Int())
+	obj := &summary.Summary{Title: "Test", Description: "testing file", FilePath: "test-" + i, AuthorId: &summary.Id{Id: 2}}
 	id, err := (*s.Client).CreateSummary(context.Background(), obj)
 	obj.Id = id
 	s.NoError(err)
@@ -70,7 +73,8 @@ func (s *ClientTestSuite) TestGetting() {
 	resp, err := (*s.Client).GetSummaryById(context.Background(), &summary.Id{Id: 1})
 	s.NoError(err)
 	obj := &db.Summary{ID: 1}
-	s.dbm.FindSummary(obj)
+	err = s.dbm.FindSummary(obj)
+	s.NoError(err)
 	s.compareEqualSummaries(&summary.Summary{Title: obj.Title, FilePath: obj.FilePath, Description: obj.Description, Id: &summary.Id{Id: obj.ID}, AuthorId: &summary.Id{Id: obj.AuthorId}}, resp)
 }
 
@@ -78,7 +82,7 @@ func (s *ClientTestSuite) TestCreating() {
 	obj := &summary.Summary{
 		Title:       "Test",
 		Description: "Summary service testing creating",
-		FilePath:    "_",
+		FilePath:    "Test-" + strconv.Itoa(rand.Int()),
 		AuthorId:    &summary.Id{Id: 2},
 	}
 	resp, err := (*s.Client).CreateSummary(context.Background(), obj)
@@ -100,10 +104,13 @@ func (s *ClientTestSuite) TestList() {
 	stream, err := (*s.Client).GetFilteredSummaries(context.Background(), &summary.FilterRequest{
 		Filter: &summary.Summary{
 			AuthorId: &summary.Id{Id: 2},
+			Tags: []*summary.Tag{
+				{Id: &summary.Id{Id: 7}},
+			},
 		},
 		Page: &summary.Page{
-			Number: 3,
-			Size:   3,
+			Number: 1,
+			Size:   5,
 		},
 	})
 	s.NoError(err)
@@ -112,10 +119,10 @@ func (s *ClientTestSuite) TestList() {
 	s.NoError(err)
 
 	s.compareEqualSummaries(obj, &summary.Summary{
-		Id:          &summary.Id{Id: 24},
-		Title:       "New",
-		Description: "New file",
-		FilePath:    "test-7880193622273556242",
+		Id:          &summary.Id{Id: 4},
+		Title:       "Test",
+		Description: "testing file",
+		FilePath:    "test",
 		AuthorId:    &summary.Id{Id: 2},
 	})
 
@@ -125,7 +132,25 @@ func (s *ClientTestSuite) TestList() {
 			break
 		}
 		s.Equal(obj.AuthorId.Id, uint64(2))
+		fmt.Println(obj.Title)
+		for _, tag := range obj.Tags {
+			fmt.Println("--> ", tag.Name, "\t\t", tag.Color)
+		}
 	}
 	err = stream.CloseSend()
 	s.NoError(err)
+}
+
+func (s *ClientTestSuite) TestFilteredGettingNullPageSize() {
+	stream, err := (*s.Client).GetFilteredSummaries(context.Background(), &summary.FilterRequest{
+		Filter: &summary.Summary{
+			Title:       "New",
+			Description: "New file",
+		},
+		Page: &summary.Page{},
+	})
+
+	_, err = stream.Recv()
+
+	s.ErrorContains(err, "Page size is 0")
 }

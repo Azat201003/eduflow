@@ -2,6 +2,7 @@ package main
 
 import (
 	"summary-service/server"
+	"summary-service/server/validators"
 
 	config "github.com/Azat201003/eduflow_service_api/config"
 
@@ -20,7 +21,7 @@ const SERVICE_ID = 1
 
 func main() {
 	// config getting
-	conf, err := config.GetConfig("../../config.yaml")
+	conf, err := config.GetConfig("../config.yaml")
 	if err != nil {
 		log.Fatalf("Error with getting config: %v", err)
 	}
@@ -45,7 +46,7 @@ func main() {
 	}
 	var opts []grpc.ServerOption
 	grpcServer := grpc.NewServer(opts...)
-	pb.RegisterSummaryServiceServer(grpcServer, server.NewServer(db))
+	pb.RegisterSummaryServiceServer(grpcServer, server.NewServer(db, new(validators.Validator)))
 
 	fmt.Println(lis.Addr())
 	grpcServer.Serve(lis)
