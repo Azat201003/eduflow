@@ -28,7 +28,7 @@ func TestClientSuite(t *testing.T) {
 	t.Helper()
 	t.Parallel()
 
-	conf, err := config.GetConfig("../../../config.yaml")
+	conf, err := config.GetConfig("../../config.yaml")
 	assert.NoError(t, err)
 	filager_conf, err := conf.GetServiceById(2)
 	assert.NoError(t, err)
@@ -50,14 +50,26 @@ func (s *ClientTestSuite) TestWriting() {
 It is **Something**, but I *don't know* what is it.
 
 `)
-	response, err := (*s.Client).StartSending(context.Background(), &filager.StartWriteRequest{FilePath: "test-" + strconv.Itoa(rand.Int()), ChunkSize: uint64(chunk_size), FileSize: uint64(len(data)), FileType: filager.FileType_DOCUMENT})
+	id := strconv.Itoa(rand.Int())
+	response, err := (*s.Client).StartSending(context.Background(), &filager.StartWriteRequest{FilePath: "test-" + id, ChunkSize: uint64(chunk_size), FileSize: uint64(len(data)), FileType: filager.FileType_DOCUMENT})
 	s.NoError(err)
+	log.Println(id)
 	uuid := response.Uuid
 	for i := 0; ; i++ {
 		if i*chunk_size >= len(data) {
 			break
 		}
-		_, err = (*s.Client).SendChunk(context.Background(), &filager.WriteChunk{Uuid: uuid, Content: data[i*chunk_size : int(math.Min(float64((i+1)*chunk_size), float64(len(data)-1)))]})
+		chunk := make([]byte, chunk_size)
+		l := i * chunk_size
+		r := int(math.Min(float64((i+1)*chunk_size), float64(len(data)-1)))
+		for j := l; j < r; j++ {
+			chunk[j-l] = data[j]
+		}
+		for j := r; j < chunk_size; j++ {
+			chunk[j-l] = '\x00'
+		}
+
+		_, err = (*s.Client).SendChunk(context.Background(), &filager.WriteChunk{Uuid: uuid, Content: chunk})
 		s.NoError(err)
 	}
 	r, err := (*s.Client).CloseSending(context.Background(), &filager.EndRequest{Uuid: uuid, Title: "New", Description: "New file", AuthorId: 2})
@@ -66,7 +78,7 @@ It is **Something**, but I *don't know* what is it.
 }
 
 func (s *ClientTestSuite) TestWriteExistError() {
-	_, err := (*s.Client).StartSending(context.Background(), &filager.StartWriteRequest{FilePath: "new"})
+	_, err := (*s.Client).StartSending(context.Background(), &filager.StartWriteRequest{FilePath: "test", ChunkSize: 8, FileSize: 32, FileType: filager.FileType_DOCUMENT})
 	s.ErrorContains(err, "exist")
 }
 
@@ -86,15 +98,15 @@ func (s *ClientTestSuite) TestReading() {
 	chunk_size := 18
 	response, err := (*s.Client).StartReading(context.Background(), &filager.StartReadRequest{
 		ChunkSize: uint64(chunk_size),
-		FilePath:  "new",
+		FilePath:  "test",
 		FileType:  filager.FileType_DOCUMENT,
 	})
 	s.NoError(err)
 	uuid := response.Uuid
 
 	var loaded_data []byte
-	for {
-		chunk, err := (*s.Client).ReadChunk(context.Background(), &filager.ReadRequest{Uuid: int32(uuid)})
+	for i := 0; ; i++ {
+		chunk, err := (*s.Client).ReadChunk(context.Background(), &filager.ReadRequest{Uuid: uuid, ChunkNumber: uint64(i)})
 		if s, _ := status.FromError(err); s.Message() == "EOF" {
 			break
 		}
@@ -143,6 +155,5 @@ func (s *ClientTestSuite) TestTimeOut() {
 	uuid := resp.Uuid
 	time.Sleep(time.Second * time.Duration(9))
 	_, err = (*s.Client).SendChunk(context.Background(), &filager.WriteChunk{Uuid: uuid, Content: []byte("# Ab")})
-	log.Println(err)
 	s.Error(err)
 }

@@ -2,15 +2,16 @@ package main
 
 import (
 	"filager-service/server"
+	redis_manager "filager-service/server/redis"
 	"filager-service/server/validators"
-
-	config "github.com/Azat201003/eduflow_service_api/config"
-	"github.com/redis/go-redis/v9"
 
 	"fmt"
 	"log"
 	"net"
 
+	"github.com/redis/go-redis/v9"
+
+	config "github.com/Azat201003/eduflow_service_api/config"
 	pb "github.com/Azat201003/eduflow_service_api/gen/go/filager"
 	"github.com/Azat201003/eduflow_service_api/gen/go/summary"
 
@@ -22,7 +23,7 @@ const SERVICE_ID = 2
 
 func main() {
 	// # Config getting
-	conf, err := config.GetConfig("../../config.yaml")
+	conf, err := config.GetConfig("../config.yaml")
 	if err != nil {
 		log.Fatalf("Error with getting config: %v", err)
 	}
@@ -65,7 +66,7 @@ func main() {
 	}
 	var opts []grpc.ServerOption
 	grpcServer := grpc.NewServer(opts...)
-	pb.RegisterFileManagerServiceServer(grpcServer, server.NewServer(redis_client, &summary_client, &validators.MyValidator{SummaryClient: summary_client}))
+	pb.RegisterFileManagerServiceServer(grpcServer, server.NewServer(redis_manager.NewRedisManager(redis_client), &summary_client, validators.NewMyValidator(&summary_client, redis_manager.NewRedisManager(redis_client))))
 
 	fmt.Println(lis.Addr())
 	grpcServer.Serve(lis)
