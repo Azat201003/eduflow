@@ -1,0 +1,31 @@
+---
+services:
+  - service:
+    name: User
+    description: Auth and user list manipulating service
+    host: localhost
+    port: 1000
+    id: 0
+    db:
+      user: eduflow_user
+      database: eduflow_user
+      schema: eduflow_user
+      password: "1234"
+  - service:
+    name: Shop
+    description: Buying something
+    host: localhost
+    port: 1001
+    id: 1
+    redis:
+      user: eduflow_shop
+      password: "5252"
+      db: 0
+
+db:
+  host: localhost
+  port: 5432
+redis:
+  host: localhost
+  port: 6379
+  
