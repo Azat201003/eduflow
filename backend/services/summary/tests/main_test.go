@@ -9,8 +9,8 @@ import (
 	"summary-service/server/db"
 	"testing"
 
-	"github.com/Azat201003/eduflow_service_api/config"
-	"github.com/Azat201003/eduflow_service_api/gen/go/summary"
+	"github.com/Azat201003/eduflow/backend/libs/config"
+	"github.com/Azat201003/eduflow/backend/libs/gen/go/summary"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"google.golang.org/grpc"

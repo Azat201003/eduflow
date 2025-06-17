@@ -1,9 +1,8 @@
-module user-service
+module github.com/Azat201003/eduflow/user
 
 go 1.23.7
 
 require (
-	// github.com/Azat201003/eduflow_service_api/config v0.0.0-20250422161735-6d0e18d9fb32
 	google.golang.org/grpc v1.72.0
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/gorm v1.25.12
@@ -28,7 +27,6 @@ require (
 )
 
 require (
-	// github.com/Azat201003/eduflow_service_api/gen v0.0.0-20250421183141-30a17e8755b4
 	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/text v0.24.0 // indirect

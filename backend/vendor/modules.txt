@@ -1,24 +1,4 @@
 ## workspace
-# github.com/Azat201003/eduflow_service_api/config v0.3.4
-## explicit; go 1.23.7
-# github.com/Azat201003/eduflow_service_api/config v0.4.1
-## explicit; go 1.23.7
-github.com/Azat201003/eduflow_service_api/config
-# github.com/Azat201003/eduflow_service_api/gen v0.2.0
-## explicit; go 1.23.7
-# github.com/Azat201003/eduflow_service_api/gen v0.2.3
-## explicit; go 1.23.7
-# github.com/Azat201003/eduflow_service_api/gen v0.4.0
-## explicit; go 1.23.7
-# github.com/Azat201003/eduflow_service_api/gen/go v0.1.6
-## explicit; go 1.23.7
-# github.com/Azat201003/eduflow_service_api/gen/go v0.2.5
-## explicit; go 1.23.7
-# github.com/Azat201003/eduflow_service_api/gen/go v0.2.7
-## explicit; go 1.23.7
-github.com/Azat201003/eduflow_service_api/gen/go/filager
-github.com/Azat201003/eduflow_service_api/gen/go/summary
-github.com/Azat201003/eduflow_service_api/gen/go/user
 # github.com/cespare/xxhash/v2 v2.3.0
 ## explicit; go 1.11
 github.com/cespare/xxhash/v2
@@ -61,6 +41,8 @@ github.com/jinzhu/inflection
 # github.com/jinzhu/now v1.1.5
 ## explicit; go 1.12
 github.com/jinzhu/now
+# github.com/kr/pretty v0.3.0
+## explicit; go 1.12
 # github.com/kr/text v0.2.0
 ## explicit
 # github.com/labstack/echo/v4 v4.13.3
@@ -253,6 +235,8 @@ google.golang.org/protobuf/runtime/protoimpl
 google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/timestamppb
+# gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c
+## explicit; go 1.11
 # gopkg.in/yaml.v3 v3.0.1
 ## explicit
 gopkg.in/yaml.v3

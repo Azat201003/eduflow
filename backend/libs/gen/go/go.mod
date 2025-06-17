@@ -1,4 +1,4 @@
-module github.com/Azat201003/eduflow_service_api/gen/go
+module github.com/Azat201003/eduflow/backend/libs/gen/go
 
 go 1.23.7
 

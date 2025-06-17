@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Azat201003/eduflow_service_api/gen/go/filager"
-	"github.com/Azat201003/eduflow_service_api/gen/go/summary"
-	"github.com/Azat201003/eduflow_service_api/gen/go/user"
+	"github.com/Azat201003/eduflow/backend/libs/gen/go/filager"
+	"github.com/Azat201003/eduflow/backend/libs/gen/go/summary"
+	"github.com/Azat201003/eduflow/backend/libs/gen/go/user"
 	"github.com/labstack/echo/v4"
 	"google.golang.org/grpc/status"
 )

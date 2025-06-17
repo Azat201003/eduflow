@@ -7,8 +7,8 @@ import (
 	"testing"
 	"user-service/server/db"
 
-	"github.com/Azat201003/eduflow_service_api/config"
-	"github.com/Azat201003/eduflow_service_api/gen/go/user"
+	"github.com/Azat201003/eduflow/backend/libs/config"
+	"github.com/Azat201003/eduflow/backend/libs/gen/go/user"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"google.golang.org/grpc"

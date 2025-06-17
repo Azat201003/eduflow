@@ -3,8 +3,6 @@ module summary-service
 go 1.23.7
 
 require (
-	github.com/Azat201003/eduflow_service_api/config v0.3.4
-	github.com/Azat201003/eduflow_service_api/gen/go v0.2.5
 	github.com/stretchr/testify v1.8.1
 	google.golang.org/grpc v1.72.0
 	google.golang.org/protobuf v1.36.6
