@@ -9,8 +9,8 @@ import (
 	"log"
 	"strings"
 
-	pb "github.com/Azat201003/eduflow_service_api/gen/go/filager"
-	"github.com/Azat201003/eduflow_service_api/gen/go/summary"
+	pb "github.com/Azat201003/eduflow/backend/libs/gen/go/filager"
+	"github.com/Azat201003/eduflow/backend/libs/gen/go/summary"
 )
 
 type Validator interface {

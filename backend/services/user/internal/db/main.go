@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/Azat201003/eduflow_service_api/config"
+	"github.com/Azat201003/eduflow/backend/libs/config"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"gorm.io/gorm"

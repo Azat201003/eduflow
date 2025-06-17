@@ -1,9 +1,9 @@
 package main
 
 import (
-	"filager-service/server"
-	redis_manager "filager-service/server/redis"
-	"filager-service/server/validators"
+	"filager/internal/server"
+	"filager/internal/validators"
+	redis_manager "filager/internal/redis"
 
 	"fmt"
 	"log"
@@ -11,9 +11,9 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	config "github.com/Azat201003/eduflow_service_api/config"
-	pb "github.com/Azat201003/eduflow_service_api/gen/go/filager"
-	"github.com/Azat201003/eduflow_service_api/gen/go/summary"
+	config "github.com/Azat201003/eduflow/backend/libs/config"
+	pb "github.com/Azat201003/eduflow/backend/libs/gen/go/filager"
+	"github.com/Azat201003/eduflow/backend/libs/gen/go/summary"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

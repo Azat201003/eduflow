@@ -1,8 +1,8 @@
 package main
 
 import (
-	"api-gateway/middlwares"
-	"api-gateway/routes"
+	"api/internal/middlwares"
+	"api/internal/routes"
 	"fmt"
 	"log"
 
@@ -21,7 +21,7 @@ import (
 
 func main() {
 	// include configuration
-	conf, err := config.GetConfig("../../config.yaml")
+	conf, err := config.GetConfig("../../../config.yaml")
 	if err != nil {
 		log.Fatalf("Error with getting configuration %v", err.Error())
 	}

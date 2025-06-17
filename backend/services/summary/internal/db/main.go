@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Azat201003/eduflow_service_api/config"
+	"github.com/Azat201003/eduflow/backend/libs/config"
 	pq "github.com/lib/pq"
 	"gorm.io/gorm"
 )

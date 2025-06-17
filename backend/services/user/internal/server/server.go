@@ -5,7 +5,7 @@ import (
 
 	"user-service/server/db"
 
-	pb "github.com/Azat201003/eduflow_service_api/gen/go/user"
+	pb "github.com/Azat201003/eduflow/backend/libs/gen/go/user"
 	"gorm.io/gorm"
 )
 

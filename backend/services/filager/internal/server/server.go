@@ -14,8 +14,8 @@ import (
 	redis_manager "filager-service/server/redis"
 	validators "filager-service/server/validators"
 
-	pb "github.com/Azat201003/eduflow_service_api/gen/go/filager"
-	"github.com/Azat201003/eduflow_service_api/gen/go/summary"
+	pb "github.com/Azat201003/eduflow/backend/libs/gen/go/filager"
+	"github.com/Azat201003/eduflow/backend/libs/gen/go/summary"
 )
 
 const DATA_FOLDER = "files/"

@@ -8,3 +8,4 @@
 [ ] add classes and functions to make code easier
 [ ] add unique config for each service
 [ ] add error messages to each service
+[ ] add general with UserClient in api *not in routes*

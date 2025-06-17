@@ -7,8 +7,8 @@ type DBConnect struct {
 	DB       string `yaml:"database"`
 	Schema   string `yaml:"schema"`
 	Password string `yaml:"password"`
-	Host string `yaml:"host"`
-	Port uint   `yaml:"port"`
+	Host 	 string `yaml:"host"`
+	Port 	 uint   `yaml:"port"`
 }
 
 type RedisConnect struct {
@@ -16,8 +16,8 @@ type RedisConnect struct {
 	DB       uint   `yaml:"db"`
 	Protocol uint   `yaml:"protocol"`
 	Password string `yaml:"password"`
-	Host string `yaml:"host"`
-	Port uint   `yaml:"port"`
+	Host	 string `yaml:"host"`
+	Port	 uint   `yaml:"port"`
 }
 
 type Service struct {

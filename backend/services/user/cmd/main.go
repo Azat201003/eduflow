@@ -3,13 +3,13 @@ package main
 import (
 	"user-service/server"
 
-	config "github.com/Azat201003/eduflow_service_api/config"
+	config "github.com/Azat201003/eduflow/backend/libs/config"
 
 	"fmt"
 	"log"
 	"net"
 
-	pb "github.com/Azat201003/eduflow_service_api/gen/go/user"
+	pb "github.com/Azat201003/eduflow/backend/libs/gen/go/user"
 
 	"google.golang.org/grpc"
 	"gorm.io/driver/postgres"

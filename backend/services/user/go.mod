@@ -9,13 +9,8 @@ require (
 	gorm.io/gorm v1.25.12
 )
 
-require (
-	github.com/Azat201003/eduflow_service_api/config v0.3.4
-	github.com/Azat201003/eduflow_service_api/gen v0.2.3
-)
 
 require (
-	github.com/Azat201003/eduflow_service_api/gen/go v0.1.6 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
